@@ -314,26 +314,43 @@ body.dragging::after{content:"Drop your ratings JSON to import";position:fixed;i
 #reqSortToggle.desc svg{transform:rotate(180deg)}
 @media(max-width:600px){.req-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}}
 
-/* ================= TOP SONGS: RECORD SLEEVE STACK ================= */
-.top-stack-wrap{position:relative;height:184px;margin:6px auto 20px;display:flex;align-items:center;justify-content:center;touch-action:pan-y}
-.top-stack{position:relative;width:148px;height:148px}
-.sleeve{position:absolute;inset:0;border-radius:14px;overflow:hidden;background:#1a1226;border:1px solid var(--border);box-shadow:0 14px 30px #0008;cursor:pointer;transition:transform .36s cubic-bezier(.34,1.56,.64,1),opacity .22s ease,box-shadow .3s;will-change:transform,opacity}
-.sleeve-peek{position:absolute;left:50%;top:0;width:140px;display:flex;flex-direction:column;align-items:center;gap:6px;transform:translate(-50%,26px) rotate(-4deg);opacity:0;z-index:49;pointer-events:none;transition:transform .42s cubic-bezier(.34,1.56,.64,1) .1s,opacity .24s ease .1s}
-.sleeve-peek.show{transform:translate(-50%,-58px) rotate(-4deg);opacity:1}
-.sleeve-peek-text{font-size:10.5px;font-weight:700;color:#c9bedd;opacity:.75;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:134px;text-shadow:0 2px 6px #000c}
-.sleeve-peek-disc{position:relative;width:112px;height:112px;border-radius:50%;background:repeating-radial-gradient(circle at center,#100a18 0 2px,#1c1329 2px 4px);box-shadow:0 10px 24px #0009,inset 0 0 0 1px #2c1c3d;display:grid;place-items:center}
-.sleeve-peek-disc::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 28%,#ffffff17,transparent 55%);pointer-events:none}
-.sleeve-peek-label{position:relative;width:76%;aspect-ratio:1;border-radius:50%;overflow:hidden;background:#241633;box-shadow:0 0 0 3px #0b0712,0 0 0 4px #3a2452}
-.sleeve-peek-label img{width:100%;height:100%;object-fit:cover;display:block}
-.sleeve-peek-hole{position:absolute;top:50%;left:50%;width:6px;height:6px;border-radius:50%;background:#0b0712;transform:translate(-50%,-50%);box-shadow:0 0 0 2px #05030899;z-index:1}
-.sleeve img{width:100%;height:100%;object-fit:cover;display:block}
-.sleeve .sleeve-name{position:absolute;left:0;right:0;bottom:0;padding:9px 10px 7px;font-size:12.5px;font-weight:700;background:linear-gradient(0deg,#000c,transparent 90%);color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sleeve.infinity{display:flex;align-items:center;justify-content:center;font-size:56px;line-height:1;color:#d9c7ff;background:linear-gradient(135deg,#291a3d,#170f22)}
-.sleeve:hover{box-shadow:0 18px 38px #000a}
-.top-stack-nav{flex:none;width:36px;height:36px;border-radius:50%;background:#170f22;border:1px solid var(--border);color:var(--text);display:grid;place-items:center;cursor:pointer;z-index:60;font-size:18px;user-select:none;transition:border-color .2s,transform .15s var(--ease)}
-.top-stack-nav:hover{border-color:#6f42a8;transform:scale(1.06)}
-.top-stack-nav.prev{margin-right:10px}
-.top-stack-nav.next{margin-left:10px}
+/* ================= TOP SONGS: VINYL SLEEVE COVERFLOW ================= */
+.cf-wrap{position:relative;margin:0 -18px 16px}
+.cf-stage{position:relative;height:330px;perspective:800px;perspective-origin:50% 50%;touch-action:pan-y;cursor:grab;outline:none;overflow:hidden;border-radius:16px}
+.cf-stage.dragging{cursor:grabbing}
+.cf-stage:focus-visible{box-shadow:inset 0 0 0 2px #b67cff66}
+.cf-item{position:absolute;left:50%;top:50%;width:170px;height:170px;margin:-85px 0 0 -85px;cursor:pointer;will-change:transform,opacity}
+.cf-item.on{cursor:default}
+.cf-disc{position:absolute;top:50%;left:50%;width:158px;height:158px;margin:-79px 0 0 -79px;border-radius:50%;background:repeating-radial-gradient(circle at center,#0d0814 0 2px,#1d1330 2px 4px);box-shadow:0 10px 22px #000c,inset 0 0 0 1px #2c1c3d}
+.cf-disc::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 28%,#ffffff1a,transparent 55%);pointer-events:none}
+.cf-disc-label{position:absolute;top:50%;left:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,#7c3aed,#3a2058);box-shadow:0 0 0 3px #0b0712,0 0 0 4px #3a2452}
+.cf-disc-label img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none}
+.cf-disc-hole{position:absolute;top:50%;left:50%;width:7px;height:7px;margin:-3px 0 0 -3px;border-radius:50%;background:#0b0712;box-shadow:0 0 0 2px #05030899}
+.cf-sleeve{position:absolute;inset:0;border-radius:14px;overflow:hidden;background:#1a1226;box-shadow:0 22px 44px #000b,inset 0 0 0 1px #ffffff14;transition:box-shadow .4s ease,filter .4s ease}
+.cf-sleeve img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none}
+.cf-sleeve.all{background:linear-gradient(135deg,#3a2058,#170f22);display:grid;place-items:center;font-size:58px;line-height:1;color:#e7d9ff}
+.cf-tag{position:absolute;left:0;right:0;bottom:0;padding:26px 11px 10px;background:linear-gradient(0deg,#000e 25%,transparent);color:#fff;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cf-item:not(.on) .cf-sleeve{filter:brightness(.62) saturate(.9)}
+.cf-item.on .cf-sleeve{box-shadow:0 26px 52px #000d,0 0 0 2px #9b5cff8c,inset 0 0 0 1px #ffffff1f}
+.cf-caption{margin-top:4px;text-align:center;min-height:44px}
+.cf-caption strong{display:block;font-size:17px;font-weight:750;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 40px}
+.cf-caption span{font-size:12px;color:var(--muted)}
+.cf-nav{position:absolute;top:165px;transform:translateY(-50%);z-index:600;width:40px;height:40px;border-radius:50%;background:#170f22f2;border:1px solid var(--border);color:var(--text);display:grid;place-items:center;font-size:20px;line-height:1;cursor:pointer;box-shadow:0 8px 22px #000a;transition:border-color .2s,transform .15s var(--ease),opacity .2s}
+.cf-nav:hover:not(:disabled){border-color:#6f42a8}
+.cf-nav:active:not(:disabled){transform:translateY(-50%) scale(.94)}
+.cf-nav:disabled{opacity:.28;cursor:default}
+.cf-nav.prev{left:14px}
+.cf-nav.next{right:14px}
+@media(max-width:700px){
+ .cf-wrap{margin:0 -12px 12px}
+ .cf-stage{height:270px}
+ .cf-item{width:150px;height:150px;margin:-75px 0 0 -75px}
+ .cf-disc{width:140px;height:140px;margin:-70px 0 0 -70px}
+ .cf-disc-label{width:52px;height:52px;margin:-26px 0 0 -26px}
+ .cf-tag{font-size:11.5px;padding:22px 9px 8px}
+ .cf-nav{display:none}
+ .cf-caption strong{font-size:16px;padding:0 20px}
+}
 
 /* ================= TOP SONGS: VINYL GRID, GROUPED BY ARTIST ================= */
 .song-shelf{display:flex;flex-direction:column;gap:14px}
@@ -375,6 +392,41 @@ body.dragging::after{content:"Drop your ratings JSON to import";position:fixed;i
 .rs-meta .song-artist{cursor:pointer}.rs-meta .song-artist:hover{color:#d9c7ff}
 .rs-row.rs-none{opacity:.55}
 @media(max-width:900px){.recent-layout{grid-template-columns:1fr}.recent-side{position:static;order:-1}}
+/* ================= ARTIST PAGE SONG LIST ================= */
+#songList{gap:7px;max-height:560px;padding:4px 8px 4px 2px}
+.ar-song{position:relative;display:grid;grid-template-columns:34px 46px minmax(0,1fr) auto;align-items:center;gap:14px;padding:9px 14px 9px 14px;border-radius:14px;background:linear-gradient(90deg,#170f22,#120b1b);border:1px solid #2a1c3a;overflow:hidden;transition:border-color .18s,box-shadow .18s,background .18s,transform .18s var(--ease)}
+.ar-song{flex:none}
+.ar-song::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:var(--tc);opacity:.55;transition:opacity .2s,box-shadow .2s}
+.ar-song[data-tier=top]{--tc:#f5c451;border-color:#4a3618}
+.ar-song[data-tier=good]{--tc:#9b5cff}
+.ar-song[data-tier=mid]{--tc:#6b5a80}
+.ar-song[data-tier=low]{--tc:#3d2c52}
+@media (hover:hover){
+ .ar-song:hover{transform:translateX(3px);border-color:#4a2f6b;background:linear-gradient(90deg,#24163a,#170f22);box-shadow:0 12px 28px #0007}
+ .ar-song:hover::before{opacity:1;box-shadow:0 0 12px var(--tc)}
+}
+.ar-num{font-size:12px;font-weight:800;letter-spacing:.02em;color:#6e6182;text-align:center;font-variant-numeric:tabular-nums}
+.ar-cover{position:relative;width:46px;height:46px;border-radius:10px;overflow:hidden;background:#261635;box-shadow:0 6px 16px #0008}
+.ar-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.ar-cover::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px #ffffff14}
+.ar-main{min-width:0}
+.ar-title{display:block;font-weight:650;font-size:14.5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);text-decoration:none}
+a.ar-title:hover{color:#d9c7ff;text-decoration:underline;text-underline-offset:3px}
+.ar-meta{margin-top:2px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ar-rate{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.ar-score{min-width:46px;text-align:center;padding:3px 10px;border-radius:999px;font-size:14px;font-weight:800;background:#2a1a3d;color:#c9b9df;font-variant-numeric:tabular-nums}
+.ar-song[data-tier=top] .ar-score{background:linear-gradient(135deg,#f5c451,#e0a422);color:#2b1c00;box-shadow:0 4px 14px #f5c45133}
+.ar-song[data-tier=good] .ar-score{background:#4c2a80;color:#efe4ff}
+.ar-song[data-tier=mid] .ar-score{background:#2f2040;color:#c9b9df}
+.ar-song[data-tier=low] .ar-score{background:#241a2f;color:#8f7f9f}
+@media(max-width:700px){
+ #songList{padding:2px 2px 2px 0}
+ .ar-song{grid-template-columns:24px 40px minmax(0,1fr) auto;gap:10px;padding:8px 10px 8px 12px}
+ .ar-cover{width:40px;height:40px;border-radius:9px}
+ .ar-title{font-size:14px}
+ .ar-score{min-width:40px;font-size:13px;padding:2px 8px}
+}
+
 /* refresh prompt (new ratings available in the Gist) */
 .controls .icon-btn{align-self:stretch}
 .refresh-btn{color:#e7d9ff;border-color:var(--purple);background:linear-gradient(180deg,#3a1f5c,#2b1742);box-shadow:0 0 0 3px #9b5cff1f,0 6px 20px #7c3aed33;animation:refreshPop .45s var(--ease) both,refreshPulse 2.2s ease-in-out .45s infinite}
@@ -489,26 +541,27 @@ body.dragging::after{content:"Drop your ratings JSON to import";position:fixed;i
 <div class="artist"><img id="artistCover" class="cover" alt="Artist artwork"><div><h2 id="artistName">—</h2><p id="artistMeta">—</p></div></div>
 <div class="score"><div class="num" id="overallScore">—</div><div class="score-stars" id="overallStars"></div><small>average</small></div>
 </section>
-<section class="stats">
+<section class="stats" id="artistStats">
 <div class="card stat"><div class="label">Rated songs</div><div class="value" id="songCount">—</div></div>
-<div class="card stat"><div class="label">Albums</div><div class="value" id="albumCount">—</div></div>
-<div class="card stat"><div class="label">Best album</div><div class="value" id="highAlbum">—</div></div>
-<div class="card stat"><div class="label">Lowest album</div><div class="value" id="lowAlbum">—</div></div>
+<div class="card stat" id="statAlbums"><div class="label">Albums</div><div class="value" id="albumCount">—</div></div>
+<div class="card stat" id="statBest"><div class="label">Best album</div><div class="value" id="highAlbum">—</div></div>
+<div class="card stat" id="statLow"><div class="label">Lowest album</div><div class="value" id="lowAlbum">—</div></div>
 </section>
-<section class="grid">
+<section class="grid" id="artistGrid">
 <div class="card"><h3>Ratings</h3><div class="chart-wrap"><canvas id="overallChart" width="560" height="330"></canvas></div><div class="legend" id="overallLegend"></div></div>
-<div class="card"><div class="album-head"><div><h3>Albums</h3><div class="hint"><span id="albumRule">3</span>+ songs</div></div><select id="albumSelect" aria-label="Select album"></select></div><div class="album-list" id="albumList"></div></div>
+<div class="card" id="albumsCard"><div class="album-head"><div><h3>Albums</h3><div class="hint"><span id="albumRule">3</span>+ songs</div></div><select id="albumSelect" aria-label="Select album"></select></div><div class="album-list" id="albumList"></div></div>
 </section>
-<section class="card" style="margin-top:14px"><h3 id="albumChartTitle">Album ratings</h3><div class="hint" id="albumChartHint"></div><div class="chart-wrap"><canvas id="albumChart" width="700" height="340"></canvas></div><div class="legend" id="albumLegend"></div></section>
-<section class="card" style="margin-top:14px"><h3>Average by decade</h3><div class="chart-wrap" style="height:230px"><canvas id="artistDecadeChart" style="width:100%;height:100%"></canvas></div></section>
-<section class="card" style="margin-top:14px"><div class="album-head"><div><h3>Songs</h3><div class="hint" id="songsHint" style="margin-bottom:0">—</div></div><button id="songsToggle" class="home-btn" type="button" aria-expanded="false" aria-controls="songList">Show songs</button></div><div id="songTools" class="tools hidden"><input id="songSearch" class="artist-search" type="search" placeholder="Search songs or albums…"><label>Min rating <select id="songMin"><option value="0">All</option><option value="3">3+</option><option value="3.5">3.5+</option><option value="4">4+</option><option value="4.5">4.5+</option><option value="5">5</option></select></label><label>Sort <select id="songSort"><option value="high">Highest rated</option><option value="low">Lowest rated</option><option value="az">Title A–Z</option><option value="album">Album</option></select></label></div><div id="songList" class="song-list hidden"></div></section>
+<section class="card" id="albumSection" style="margin-top:14px"><h3 id="albumChartTitle">Album ratings</h3><div class="hint" id="albumChartHint"></div><div class="chart-wrap"><canvas id="albumChart" width="700" height="340"></canvas></div><div class="legend" id="albumLegend"></div></section>
+<section class="card" style="margin-top:14px"><div class="album-head"><div><h3>Songs</h3><div class="hint" id="songsHint" style="margin-bottom:0">—</div></div></div><div id="songTools" class="tools"><input id="songSearch" class="artist-search" type="search" placeholder="Search songs or albums…"><label>Min rating <select id="songMin"><option value="0">All</option><option value="3">3+</option><option value="3.5">3.5+</option><option value="4">4+</option><option value="4.5">4.5+</option><option value="5">5</option></select></label><label>Sort <select id="songSort"><option value="high">Highest rated</option><option value="low">Lowest rated</option><option value="az">Title A–Z</option><option value="album">Album</option></select></label></div><div id="songList" class="song-list"></div></section>
+<section class="card" id="artistDecadeSection" style="margin-top:14px"><h3>Average by decade</h3><div class="chart-wrap" style="height:230px"><canvas id="artistDecadeChart" style="width:100%;height:100%"></canvas></div></section>
 </main>
 <main id="topPage" class="hidden"><section class="hero" style="margin-bottom:34px"><div><h2 style="margin:0;font-size:28px">Top Songs</h2></div><div class="score"><div class="num" id="topCount">—</div><small>songs</small></div></section>
 <section class="card" data-accent="gold">
-<div class="top-stack-wrap" id="topStackWrap">
- <div class="top-stack-nav prev" id="topStackPrev" aria-label="Previous artist">‹</div>
- <div class="top-stack" id="topStack"><div class="sleeve-peek" id="sleevePeek"></div></div>
- <div class="top-stack-nav next" id="topStackNext" aria-label="Next artist">›</div>
+<div class="cf-wrap">
+ <button type="button" class="cf-nav prev" id="cfPrev" aria-label="Previous artist">‹</button>
+ <div class="cf-stage" id="cfStage" tabindex="0" role="group" aria-label="Artists. Use left and right arrow keys to browse."></div>
+ <button type="button" class="cf-nav next" id="cfNext" aria-label="Next artist">›</button>
+ <div class="cf-caption" id="cfCaption" aria-live="polite"></div>
 </div>
 <div id="topList" class="song-shelf"></div></section></main>
 <main id="recentPage" class="hidden"><section class="hero" style="margin-bottom:34px"><div><h2 style="margin:0;font-size:28px">Recently Rated</h2><p id="recentHint" style="margin:0"></p></div><div class="score"><div class="num" id="recentCount">—</div><small>songs</small></div></section>
@@ -836,7 +889,7 @@ function showArtist(name){
  if(!artists.has(name))return;
  currentArtist=name;artistSearch.value="";updateArtistControls();
  showPage("artistPage",null);
- currentAlbum=0;songSearch.value="";songMin.value="0";songSort.value="high";renderArtist();renderSongs();pageChanged("artist");
+ currentAlbum=0;songSearch.value="";songMin.value="0";songSort.value="high";try{renderArtist()}finally{renderSongs()}pageChanged("artist");
 }
 function renderHome(){
  const stats=artistStats(),allSongs=tracks.length,albumTotal=stats.reduce((n,a)=>n+a.albums.length,0);
@@ -888,6 +941,19 @@ function updateAllArtistsFilter(){
   empty.style.display="none";
  }
 }
+// Hides sections that would show nothing for this artist: album-only panels when there are no albums,
+// and the decade chart when no track has a release year. Hidden stat cards leave the row
+// evenly filled, and the artist line only mentions albums when there are some.
+function updateArtistEmptyStates(ts,als){
+ const hasAlbums=als.length>0;
+ const hasYears=ts.some(t=>+String(t.release?.isoString||"").slice(0,4));
+ statAlbums.hidden=statBest.hidden=statLow.hidden=!hasAlbums;
+ albumsCard.hidden=albumSection.hidden=!hasAlbums;
+ artistDecadeSection.hidden=!hasYears;
+ artistGrid.style.gridTemplateColumns=hasAlbums?"":"1fr";
+ artistStats.style.gridTemplateColumns=hasAlbums?"":"repeat(auto-fit,minmax(160px,1fr))";
+ artistMeta.textContent=[`${ts.length} songs`,hasAlbums?`${als.length} album${als.length==1?"":"s"}`:""].filter(Boolean).join(" · ");
+}
 function renderArtist(){
  albumRule.textContent=MIN_ALBUM_SONGS;
  const ts=artists.get(currentArtist)||[],als=albumsFor(currentArtist);
@@ -905,16 +971,12 @@ function renderArtist(){
  <img class="thumb" src="${esc(a.image)}" alt="" onerror="this.style.visibility='hidden'">
  <div><div class="album-name">${esc(a.name)}</div><div class="album-meta">${a.tracks.length} song${a.tracks.length==1?"":"s"}</div><div class="bar"><i style="width:${avg(a.tracks)/5*100}%"></i></div></div>
  <div class="album-score"><span>${fmt(avg(a.tracks))}</span>${stars(avg(a.tracks),"sm")}</div></div>`).join("")||`<div class="empty">No albums with ${MIN_ALBUM_SONGS}+ songs.</div>`;
- drawPie(overallChart,dist(ts),overallLegend);renderAlbum();drawDecades(artistDecadeChart,ts);
+ drawPie(overallChart,dist(ts),overallLegend);renderAlbum();drawDecades(artistDecadeChart,ts);updateArtistEmptyStates(ts,als);
 }
-let songsOpen=false;
+let songsOpen=true;
 function trackUrl(t){const m=String(t.uri||"").match(/^spotify:track:([A-Za-z0-9]+)$/);return m?"https://open.spotify.com/track/"+m[1]:""}
 function setSongsOpen(open){
- songsOpen=open;
- songList.classList.toggle("hidden",!open);songTools.classList.toggle("hidden",!open);
- songsToggle.setAttribute("aria-expanded",String(open));
- const n=(artists.get(currentArtist)||[]).length;
- songsToggle.textContent=open?"Hide songs":`Show songs (${n})`;
+ songsOpen=true; // the list is always shown; there is no toggle
 }
 function songRow(t,i,withArtist,extra){
  const url=trackUrl(t),title=esc(t.name||"Untitled"),r=t.rating,tier=r>=4.5?"top":r>=3.5?"good":r>=2.5?"mid":"low";
@@ -925,145 +987,160 @@ function songRow(t,i,withArtist,extra){
    <div class="song-main"><div class="song-name">${url?`<a href="${esc(url)}" target="_blank" rel="noopener">${title}</a>`:title}</div><div class="song-meta">${meta}</div></div>
    <div class="song-rating"><span>${t.rating}</span>${stars(t.rating,"sm")}</div></div>`;
 }
+// Artist-page song row: numbered, cover with an inner highlight, a tier-coloured accent bar,
+// and a rating pill with stars. Scoped to the artist page's song list only.
+function artistSongRow(t,i){
+ const url=trackUrl(t),title=esc(t.name||"Untitled"),r=t.rating,tier=r>=4.5?"top":r>=3.5?"good":r>=2.5?"mid":"low";
+ const name=url?`<a class="ar-title" href="${esc(url)}" target="_blank" rel="noopener">${title}</a>`:`<div class="ar-title">${title}</div>`;
+ return `<div class="ar-song" data-tier="${tier}">
+   <div class="ar-num">${String(i+1).padStart(2,"0")}</div>
+   <div class="ar-cover"><img src="${esc(img(t.album.images))}" alt="" onerror="this.style.visibility='hidden'"></div>
+   <div class="ar-main">${name}<div class="ar-meta">${esc(t.album.name)}</div></div>
+   <div class="ar-rate"><span class="ar-score">${r}</span>${stars(r,"sm")}</div>
+  </div>`;
+}
 const byName=(a,b)=>String(a.name||"").localeCompare(String(b.name||""),undefined,{sensitivity:"base"});
 function renderSongs(){
  const all=artists.get(currentArtist)||[],q=songSearch.value.trim().toLowerCase(),min=Number(songMin.value);
  const sorters={high:(a,b)=>b.rating-a.rating||byName(a,b),low:(a,b)=>a.rating-b.rating||byName(a,b),az:byName,album:(a,b)=>String(a.album.name).localeCompare(String(b.album.name))||(a.trackNumber||0)-(b.trackNumber||0)};
  const ts=all.filter(t=>t.rating>=min&&(!q||String(t.name||"").toLowerCase().includes(q)||String(t.album.name).toLowerCase().includes(q))).sort(sorters[songSort.value]);
  songsHint.textContent=`${ts.length} of ${all.length}`;
- songList.innerHTML=ts.map((t,i)=>songRow(t,i,false)).join("")||'<div class="empty">No songs match.</div>';
+ songList.innerHTML=ts.map((t,i)=>artistSongRow(t,i)).join("")||'<div class="empty">No songs match.</div>';
  songList.scrollTop=0;setSongsOpen(songsOpen);
 }
-let topArtistFilter="",sleeveItems=[],sleeveFront=0;
-function buildSleeveItems(){
+let topArtistFilter="",tsItems=[],cfItems=[],cfCurrent=0,cfTarget=0,cfRaf=0,cfDrag=null,cfMoved=false,cfWheelAcc=0;
+// Circular vinyl-sleeve coverflow. The centred sleeve faces front with its record slid up out of the top;
+// neighbours splay away in 3D. Positions wrap around, so the last artist sits just left of the first.
+// Position is a continuous value that eases toward the chosen artist each frame.
+function buildTsItems(){
  const q=norm(artistSearch.value.trim());
  const names=[...artists.keys()].filter(n=>(!q||norm(n).includes(q))&&artists.get(n).some(t=>t.rating>=4)).sort(byAlpha);
- sleeveItems=[{key:"",label:"All Songs",infinity:true},...names.map(n=>({key:n,label:n,img:img(artists.get(n)[0]?.album?.images)}))];
+ return [
+  {key:"",label:"All Songs",all:true,count:tracks.filter(t=>t.rating>=4).length},
+  ...names.map(n=>({key:n,label:n,img:img(artists.get(n)[0]?.album?.images),count:artists.get(n).filter(t=>t.rating>=4).length}))
+ ];
 }
-// Fixed, recycled carousel pool: 5 visible slots (center + 2 either side) plus one invisible
-// buffer slot on each edge for the enter animation — 7 elements total, created once and never
-// removed again. A step just relabels whichever pool element falls off one edge into the item
-// newly entering the opposite edge, instead of creating/destroying DOM nodes on a timer — that
-// timer-based create/remove was the source of the flicker and "ghost" covers.
-let sleevePool=[]; // {el,offset,idx}
-const SLEEVE_VISIBLE=2,SLEEVE_MIN=-(SLEEVE_VISIBLE+1),SLEEVE_MAX=SLEEVE_VISIBLE+1;
-const SLEEVE_SLOTS={
- 0:{tx:0,ty:0,scale:1,rot:0,opacity:1,z:50},
- 1:{tx:92,ty:10,scale:.84,rot:3,opacity:.6,z:30},
- 2:{tx:168,ty:20,scale:.68,rot:5.5,opacity:.28,z:15},
- 3:{tx:222,ty:28,scale:.55,rot:7,opacity:0,z:5}
-};
-function slotStyle(offset){
- const abs=Math.min(Math.abs(offset),3),s=SLEEVE_SLOTS[abs],sign=offset<0?-1:1;
- return{tx:sign*s.tx,ty:s.ty,scale:s.scale,rot:sign*s.rot,opacity:s.opacity,z:s.z};
+function cfItemHtml(it,i){
+ const label=esc(it.label);
+ const discImg=it.all?"":`<img src="${esc(it.img)}" alt="" draggable="false" onerror="this.style.display='none'">`;
+ const disc=`<div class="cf-disc"><div class="cf-disc-label">${discImg}</div><div class="cf-disc-hole"></div></div>`;
+ const sleeve=it.all
+  ?`<div class="cf-sleeve all">∞<div class="cf-tag">${label}</div></div>`
+  :`<div class="cf-sleeve"><img src="${esc(it.img)}" alt="" draggable="false" loading="lazy" onerror="this.style.display='none'"><div class="cf-tag">${label}</div></div>`;
+ return `<div class="cf-item" data-i="${i}" aria-label="${label}">${disc}${sleeve}</div>`;
 }
-function applySleeveStyle(el,offset,withTransition){
- el.style.transition=withTransition?"":"none";
- const st=slotStyle(offset);
- el.style.transform=`translate(${st.tx}px,${st.ty}px) scale(${st.scale}) rotate(${st.rot}deg)`;
- el.style.opacity=st.opacity;el.style.zIndex=st.z;
- el.style.pointerEvents=Math.abs(offset)<=SLEEVE_VISIBLE?"auto":"none";
-}
-function setSleeveContent(el,item){
- el.dataset.key=item.key;
- el.className="sleeve"+(item.infinity?" infinity":"");
- el.innerHTML=item.infinity?"∞":`<img src="${esc(item.img)}" alt="" onerror="this.style.display='none'"><span class="sleeve-name">${esc(item.label)}</span>`;
-}
-function pickRandomSong(artistKey){
- const ts=artists.get(artistKey);
- return ts&&ts.length?ts[Math.floor(Math.random()*ts.length)]:null;
-}
-// A random track from whichever artist is centered peeks out above the sleeve as a little vinyl
-// record — grooves, a center label carrying the song's own art, and its title in small subtle
-// type above — re-rolled and re-animated every time a new artist lands in front.
-function updateSleevePeek(){
- if(!sleevePeek)return;
- const item=sleeveItems[sleeveFront];
- const song=item&&!item.infinity?pickRandomSong(item.key):null;
- if(!song){sleevePeek.classList.remove("show");return}
- sleevePeek.innerHTML=`<div class="sleeve-peek-text">${esc(song.name||"Untitled")}</div>
-  <div class="sleeve-peek-disc"><div class="sleeve-peek-hole"></div>
-   <div class="sleeve-peek-label"><img src="${esc(img(song.album.images))}" alt="" onerror="this.style.display='none'"></div>
-  </div>`;
- sleevePeek.classList.remove("show");
- void sleevePeek.offsetWidth; // restart the slide-out even if it's already showing
- sleevePeek.classList.add("show");
-}
-// Places the pool fresh, with no slide — used on page open or when the artist filter changes.
-function layoutSleevesFresh(){
- for(const p of sleevePool)p.el.remove();
- sleevePool=[];
- const N=sleeveItems.length;if(!N){updateSleevePeek();return}
- for(let o=SLEEVE_MIN;o<=SLEEVE_MAX;o++){
-  const idx=((sleeveFront+o)%N+N)%N,item=sleeveItems[idx];
-  const el=document.createElement("div");
-  setSleeveContent(el,item);
-  topStack.appendChild(el);
-  applySleeveStyle(el,o,false);
-  sleevePool.push({el,offset:o,idx});
+// Index (0..n-1) of the artist nearest a continuous position.
+function cfWrapIdx(v){const n=tsItems.length;return ((Math.round(v)%n)+n)%n}
+// Paints every sleeve for the current position. Distance from centre is wrapped into (-n/2, n/2],
+// so the ring closes: the far end of the list sits immediately beside the start.
+function cfPaint(){
+ const n=tsItems.length;
+ const narrow=window.innerWidth<=700,step=narrow?92:105,deep=narrow?70:120,lift=narrow?62:70,splay=58;
+ for(const c of cfItems){
+  let d=c.i-cfCurrent;
+  d=d-n*Math.round(d/n);
+  const a=Math.abs(d),sign=d<0?-1:1;
+  const x=a<1?d*step:sign*(step+(a-1)*step*.5);
+  const z=-deep*a;
+  const rot=a<1?-d*splay:-sign*splay;
+  const s=a<1?1-.14*a:Math.max(.7,.86-(a-1)*.06);
+  let op=a<1?1-.1*a:Math.max(.25,.9-(a-1)*.25);
+  op*=Math.max(0,Math.min(1,(3.6-a)/.6));
+  c.el.style.transform=`translate3d(${x.toFixed(1)}px,0,${z.toFixed(1)}px) rotateY(${rot.toFixed(2)}deg) scale(${s.toFixed(3)})`;
+  c.el.style.opacity=op.toFixed(3);
+  c.el.style.zIndex=Math.round(500-a*100);
+  c.el.style.pointerEvents=op>0.05?"auto":"none";
+  c.disc.style.transform=`translateY(${(-lift*Math.max(0,1-a)).toFixed(1)}px)`;
+  c.el.classList.toggle("on",a<0.5);
  }
- updateSleevePeek();
 }
-// Slides the whole pool by one slot. dir=+1: content shifts left (the leftmost sleeve exits and
-// is recycled to relabel as the new sleeve entering from the right); dir=-1 is the mirror image.
-function stepSleeve(dir){
- const N=sleeveItems.length;if(N<2)return;
- sleeveFront=((sleeveFront+dir)%N+N)%N;
- for(const p of sleevePool){
-  p.offset-=dir;
-  if(p.offset<SLEEVE_MIN||p.offset>SLEEVE_MAX){
-   p.offset=dir>0?SLEEVE_MAX:SLEEVE_MIN;
-   p.idx=((sleeveFront+p.offset)%N+N)%N;
-   setSleeveContent(p.el,sleeveItems[p.idx]);
-   applySleeveStyle(p.el,p.offset,false); // relabeled while off-screen — no visible jump
-  }else{
-   p.idx=((sleeveFront+p.offset)%N+N)%N;
-   applySleeveStyle(p.el,p.offset,true);
-  }
- }
- const key=sleeveItems[sleeveFront]?.key||"";
- if(key!==topArtistFilter){topArtistFilter=key;renderTop()}
- updateSleevePeek();
+function updateChrome(){
+ const it=tsItems[cfWrapIdx(cfTarget)];
+ cfCaption.innerHTML=it?`<strong>${esc(it.label)}</strong><span>${it.count.toLocaleString()} song${it.count==1?"":"s"}</span>`:"";
+ cfPrev.disabled=tsItems.length<2;
+ cfNext.disabled=tsItems.length<2;
 }
+// Eases the position toward the target each frame until it settles.
+function cfTick(){
+ const diff=cfTarget-cfCurrent;
+ if(Math.abs(diff)<0.002){cfCurrent=cfTarget;cfPaint();cfRaf=0;return}
+ cfCurrent+=diff*0.16;
+ cfPaint();
+ cfRaf=requestAnimationFrame(cfTick);
+}
+function cfKick(){if(!cfRaf)cfRaf=requestAnimationFrame(cfTick)}
+// Glides to artist index j (any integer; wrapped), taking the shorter way round the ring,
+// then filters the grid below.
+function cfSelect(j){
+ const n=tsItems.length;if(!n)return;
+ const base=Math.round(cfTarget);
+ let delta=(((j-cfWrapIdx(cfTarget))%n)+n)%n;
+ if(delta>n/2)delta-=n;
+ cfTarget=base+delta;
+ const it=tsItems[cfWrapIdx(cfTarget)];
+ if(it.key!==topArtistFilter){topArtistFilter=it.key;renderTop()}
+ updateChrome();
+ cfKick();
+}
+// Rebuilds the sleeves (on page open or when the search box changes), keeping the chosen artist if still listed.
 function renderSleeveStack(){
- buildSleeveItems();
- const idx=sleeveItems.findIndex(s=>s.key===topArtistFilter);
- sleeveFront=idx>=0?idx:0;
- topArtistFilter=sleeveItems[sleeveFront]?.key||"";
- layoutSleevesFresh();
+ tsItems=buildTsItems();
+ if(!tsItems.some(s=>s.key===topArtistFilter))topArtistFilter="";
+ const idx=Math.max(0,tsItems.findIndex(s=>s.key===topArtistFilter));
+ cfCurrent=cfTarget=idx;
+ cfStage.innerHTML=tsItems.map(cfItemHtml).join("")||'<div class="empty">No artists match.</div>';
+ cfItems=[...cfStage.querySelectorAll(".cf-item")].map(el=>({el,disc:el.querySelector(".cf-disc"),i:+el.dataset.i}));
+ cfPaint();
+ updateChrome();
+ renderTop();
 }
-function advanceSleeve(delta){
- const dir=delta<0?-1:1;
- for(let i=0;i<Math.abs(delta);i++)stepSleeve(dir);
-}
-topStack.addEventListener("click",e=>{
- const el=e.target.closest(".sleeve");if(!el)return;
- const p=sleevePool.find(pp=>pp.el===el);
- if(!p||!p.offset)return;
- advanceSleeve(p.offset);
+cfPrev.addEventListener("click",()=>cfSelect(cfWrapIdx(cfTarget)-1));
+cfNext.addEventListener("click",()=>cfSelect(cfWrapIdx(cfTarget)+1));
+cfStage.addEventListener("click",e=>{
+ const moved=cfMoved;cfMoved=false;
+ if(moved)return;
+ const el=e.target.closest(".cf-item");if(!el)return;
+ const i=+el.dataset.i;
+ if(i!==cfWrapIdx(cfTarget))cfSelect(i);
 });
-topStackPrev.addEventListener("click",()=>advanceSleeve(-1));
-topStackNext.addEventListener("click",()=>advanceSleeve(1));
-// One wheel/trackpad "notch" of accumulated delta advances exactly one slot; a short lock just
-// keeps a single physical scroll gesture from firing many steps at once.
-let sleeveWheelLock=false,wheelAccum=0;
-const SLEEVE_WHEEL_THRESH=28,SLEEVE_WHEEL_LOCK=110;
-topStackWrap.addEventListener("wheel",e=>{
- if(!sleeveItems.length)return;
+cfStage.addEventListener("keydown",e=>{
+ if(e.key==="ArrowLeft"){e.preventDefault();cfSelect(cfWrapIdx(cfTarget)-1)}
+ else if(e.key==="ArrowRight"){e.preventDefault();cfSelect(cfWrapIdx(cfTarget)+1)}
+});
+// Mouse or touch drag: the ring follows the pointer, then settles on the nearest artist on release.
+cfStage.addEventListener("pointerdown",e=>{
+ if(e.button!==0)return;
+ cfDrag={x:e.clientX,start:cfCurrent};cfMoved=false;
+});
+window.addEventListener("pointermove",e=>{
+ if(!cfDrag)return;
+ const dx=e.clientX-cfDrag.x;
+ if(!cfMoved&&Math.abs(dx)>4){cfMoved=true;cfStage.classList.add("dragging")}
+ if(!cfMoved)return;
+ const step=window.innerWidth<=700?92:105;
+ cfCurrent=cfDrag.start-dx/step;
+ cfTarget=cfCurrent;
+ cfPaint();
+});
+window.addEventListener("pointerup",()=>{
+ if(!cfDrag)return;
+ const wasMoved=cfMoved;
+ cfDrag=null;cfStage.classList.remove("dragging");
+ if(wasMoved){
+  const j=Math.round(cfCurrent);
+  cfTarget=cfCurrent;
+  cfSelect(((j%tsItems.length)+tsItems.length)%tsItems.length);
+ }
+});
+// Wheel or trackpad: accumulates small deltas so each notch or swipe glides one artist, looping around.
+cfStage.addEventListener("wheel",e=>{
+ const d=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;
+ if(!d||tsItems.length<2)return;
  e.preventDefault();
- wheelAccum+=e.deltaY||e.deltaX;
- if(sleeveWheelLock||Math.abs(wheelAccum)<SLEEVE_WHEEL_THRESH)return;
- wheelAccum=0;sleeveWheelLock=true;
- advanceSleeve((e.deltaY||e.deltaX)>0?1:-1);
- setTimeout(()=>sleeveWheelLock=false,SLEEVE_WHEEL_LOCK);
+ cfWheelAcc+=d;
+ if(Math.abs(cfWheelAcc)>=60){cfSelect(cfWrapIdx(cfTarget)+(cfWheelAcc>0?1:-1));cfWheelAcc=0}
 },{passive:false});
-let sleeveDragX=null;
-topStackWrap.addEventListener("pointerdown",e=>{sleeveDragX=e.clientX});
-topStackWrap.addEventListener("pointerup",e=>{
- if(sleeveDragX==null)return;
- const dx=e.clientX-sleeveDragX;sleeveDragX=null;
- if(Math.abs(dx)>24)advanceSleeve(dx<0?1:-1);
-});
+window.addEventListener("resize",()=>cfPaint());
 function vinylCard(t){
  const url=trackUrl(t),title=esc(t.name||"Untitled"),album=esc(t.album.name||"");
  const inner=`<div class="sv-stars">${t.rating.toFixed(1).replace(/\.0$/,"")} ★</div>
@@ -1472,7 +1549,6 @@ artistSuggest.addEventListener("mousemove",e=>{const el=e.target.closest(".sg-it
 document.addEventListener("click",e=>{if(!artistSuggest.contains(e.target)&&e.target!==artistSearch)closeSuggest()});
 topArtists.addEventListener("click",e=>{const el=e.target.closest("[data-artist]");if(el)showArtist(el.dataset.artist)});
 allArtists.addEventListener("click",e=>{const el=e.target.closest("[data-artist]");if(el)showArtist(el.dataset.artist)});
-songsToggle.addEventListener("click",()=>setSongsOpen(!songsOpen));
 albumSelect.addEventListener("change",e=>{currentAlbum=Number(e.target.value);renderAlbum()});
 albumList.addEventListener("click",e=>{const el=e.target.closest(".album");if(!el)return;currentAlbum=Number(el.dataset.i);albumSelect.value=currentAlbum;renderAlbum()});
 function readFileText(file){
