@@ -454,6 +454,31 @@ a.ar-title:hover{color:#d9c7ff;text-decoration:underline;text-underline-offset:3
 .pl-rate{display:flex;align-items:center;gap:8px;font-weight:700;margin-top:auto}
 @media(max-width:600px){.pl-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}}
 .pl-title{color:inherit;text-decoration:none}.pl-title:hover{text-decoration:underline;color:#d9c7ff}
+
+/* ================= TUTORIAL ================= */
+.tut-overlay{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:#07040dcc;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:rise .3s var(--ease) both}
+.tut-overlay.hidden{display:none!important}
+.tut-card{position:relative;width:100%;max-width:580px;max-height:calc(100vh - 40px);overflow:auto;padding:34px 30px 26px;border-radius:24px;background:linear-gradient(160deg,#1d1230,#110b18 75%);border:1px solid #38234f;box-shadow:inset 0 1px 0 #ffffff0f,var(--shadow)}
+.tut-close{position:absolute;top:12px;right:12px;width:34px;height:34px;padding:0;border-radius:50%;background:#170f22;border:1px solid var(--border);color:var(--muted);font-size:20px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.tut-card h2{margin:0 0 8px;font-size:24px;letter-spacing:-.03em;padding-right:30px}
+.tut-card>div>p{margin:0 0 16px;color:var(--muted)}
+.tut-choices,.tut-nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.tut-nav{justify-content:space-between}
+#tutSplash .tut-choices{flex-direction:column;align-items:center;gap:14px;margin-top:22px}
+.tut-alt{background:none;border:0;padding:6px 10px;color:#8b7fa0;font-size:14px;cursor:pointer;border-radius:8px;transition:color .2s}
+.tut-alt span{text-decoration:underline;text-underline-offset:3px;text-decoration-color:#8b7fa066}
+.tut-alt:hover,.tut-alt:focus-visible{color:var(--purple-soft)}
+.tut-steps{margin:0;padding:0;list-style:none;counter-reset:tut}
+.tut-steps>li{counter-increment:tut;position:relative;padding:0 0 16px 40px;color:var(--muted);font-size:14px;line-height:1.55}
+.tut-steps>li::before{content:counter(tut);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#7c3aed,#6d28d9);color:#fff;font-size:13px;font-weight:700}
+.tut-steps strong{color:var(--text)}
+.tut-steps a{color:var(--purple-soft)}
+.tut-steps code{background:#0e0916;padding:1px 6px;border-radius:6px;color:#cbbfe0;font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.tut-code{display:block!important;margin:6px 0 0;padding:8px 10px!important;border-radius:8px;white-space:pre-wrap;word-break:break-all}
+.tut-sub{margin:14px 0 0;padding-top:14px;border-top:1px solid var(--border)}
+.tut-sub h3{margin:0 0 12px;font-size:15px;color:var(--purple-soft)}
+.tut-sub>p{margin:14px 0 0;font-size:13px}
+@media(max-width:600px){.tut-card{padding:30px 20px 22px}.tut-card h2{font-size:21px}}
 </style>
 </head>
 <body data-state="loading">
@@ -467,7 +492,7 @@ a.ar-title:hover{color:#d9c7ff;text-decoration:underline;text-underline-offset:3
 <button id="playlistsBtn" class="home-btn">Playlists</button>
 <button id="requestBtn" class="home-btn">Request</button>
 <input id="artistSearch" class="artist-search" type="search" placeholder="Search artists or songs…" aria-label="Search artists or songs" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="artistSuggest" aria-autocomplete="list">
-<label class="file-label icon-btn" title="Load ratings JSON" aria-label="Load ratings JSON"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h8V4"/><path d="M8 14h8v6H8z"/></svg><input id="fileInput" type="file" accept=".json,application/json"></label>
+<label id="fileLabel" class="file-label icon-btn" title="Load ratings JSON (Shift-click for the guide)" aria-label="Load ratings JSON"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h8V4"/><path d="M8 14h8v6H8z"/></svg><input id="fileInput" type="file" accept=".json,application/json"></label>
 <button id="refreshBtn" class="home-btn icon-btn refresh-btn" type="button" hidden aria-label="New ratings available. Refresh"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.9-3.5M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.9 3.5M20 20v-4h-4"/></svg></button>
 <div id="artistSuggest" class="suggest" role="listbox" hidden></div>
 </div>
@@ -609,6 +634,46 @@ a.ar-title:hover{color:#d9c7ff;text-decoration:underline;text-underline-offset:3
 <button type="button" data-go="request"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/><path d="M20 3v5M22.5 5.5h-5" stroke-width="2"/></svg>Request</button>
 <button type="button" data-go="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Search</button>
 </nav>
+
+<!-- ================= TUTORIAL (first visit, or shift-click the load button) ================= -->
+<div id="tutorial" class="tut-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="tutTitle">
+<div class="tut-card">
+ <button type="button" id="tutClose" class="tut-close" aria-label="Close guide">×</button>
+
+ <div id="tutSplash">
+  <h2 id="tutTitle">Welcome to Music Ratings</h2>
+  <p>Browse the ratings and see what's here.</p>
+  <div class="tut-choices">
+   <button type="button" id="tutView" class="btn-primary">Start exploring</button>
+   <button type="button" id="tutUpload" class="tut-alt">Have your own ratings? <span>Upload them</span></button>
+  </div>
+ </div>
+
+ <div id="tutSteps" class="hidden">
+  <h2>Add your own ratings</h2>
+  <p>Rate songs in Spotify with a plugin, export them, then load the file here. Follow these steps in order.</p>
+  <ol class="tut-steps">
+   <li><strong>Install Spicetify.</strong> Spicetify is a free tool that adds plugins to the Spotify desktop app. Follow the <a href="https://spicetify.app/docs/getting-started" target="_blank" rel="noopener">Spicetify getting-started guide</a>, then run:<code class="tut-code">spicetify backup apply</code></li>
+   <li><strong>Get the Star Ratings plugin.</strong> Download it from the <a href="https://github.com/BrandonHfx/spicetify-salt-music" target="_blank" rel="noopener">custom plugin directory</a>. Run <code>spicetify config-dir</code> to find your Spicetify folder, then put <code>star-ratings.js</code> in its <strong>Extensions</strong> subfolder.</li>
+   <li><strong>Turn it on.</strong> Run these two commands, then restart Spotify:<code class="tut-code">spicetify config extensions star-ratings.js
+spicetify apply</code></li>
+   <li><strong>Rate your songs.</strong> Click the stars on a track, or press Ctrl + Alt + 1 through 0 while a song plays.</li>
+   <li><strong>Export your ratings.</strong> Open the Star Ratings settings in Spotify, find Export ratings, and click <strong>Export To File</strong>. This saves <code>ratings-export.json</code>.</li>
+   <li><strong>Load them here.</strong> Click the load icon in the header and choose that file, or drop it anywhere on this page. Shift-click the icon any time to reopen this guide.</li>
+  </ol>
+  <div class="tut-sub">
+   <h3>Optional: automatic updates with cloud sync</h3>
+   <ol class="tut-steps">
+    <li><strong>Create a GitHub token.</strong> Go to <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a>, choose Generate new token (classic), tick only the <strong>gist</strong> scope, and copy the token that starts with ghp_. GitHub only shows it once.</li>
+    <li><strong>Create a Gist.</strong> Go to <a href="https://gist.github.com" target="_blank" rel="noopener">gist.github.com</a>, name the file <strong>ratings_export.json</strong>, put <code>{}</code> as the content, choose Create secret gist, and copy the Gist ID from the page URL.</li>
+    <li><strong>Connect the plugin.</strong> In Star Ratings settings, paste the token and Gist ID, then turn on <strong>Cloud sync</strong>.</li>
+   </ol>
+   <p>This page loads its own built-in Gist, so cloud sync only shows your ratings here if the page is set up with your Gist ID. Otherwise use Export To File and the load icon.</p>
+  </div>
+  <div class="tut-nav"><button type="button" id="tutBack" class="home-btn">Back</button><button type="button" id="tutDone" class="btn-primary">Got it</button></div>
+ </div>
+</div>
+</div>
 
 <script>
 let rawPlaylists=[],playlists=[],currentPlaylist="",rawTracks=[],tracks=[],artists=new Map(),currentArtist="",currentAlbum=0,dedupeOn=true,dupeCount=0,sourceName="";
@@ -2115,7 +2180,46 @@ reqSortToggle.addEventListener("click",()=>{
  renderReqGrid();
 });
 
+/* ---- Tutorial: first-visit splash, reopened by shift-clicking the Load button ---- */
+const TUTORIAL_SEEN_KEY="musicTutorialSeen";
+const tutorialEl=document.getElementById("tutorial");
+const tutSplash=document.getElementById("tutSplash");
+const tutSteps=document.getElementById("tutSteps");
+function showTutorialPane(which){
+ tutSplash.classList.toggle("hidden",which!=="splash");
+ tutSteps.classList.toggle("hidden",which!=="steps");
+}
+function openTutorial(){
+ showTutorialPane("splash");
+ tutorialEl.classList.remove("hidden");
+ document.getElementById("tutView").focus();
+}
+function closeTutorial(){
+ tutorialEl.classList.add("hidden");
+ try{localStorage.setItem(TUTORIAL_SEEN_KEY,"1")}catch{}
+}
+document.getElementById("tutUpload").addEventListener("click",()=>showTutorialPane("steps"));
+document.getElementById("tutBack").addEventListener("click",()=>showTutorialPane("splash"));
+document.getElementById("tutView").addEventListener("click",closeTutorial);
+document.getElementById("tutDone").addEventListener("click",closeTutorial);
+document.getElementById("tutClose").addEventListener("click",closeTutorial);
+tutorialEl.addEventListener("click",e=>{if(e.target===tutorialEl)closeTutorial()});
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape"&&!tutorialEl.classList.contains("hidden"))closeTutorial();
+});
+// Shift-clicking the load button reopens the guide instead of the file picker
+fileLabel.addEventListener("click",e=>{
+ if(!e.shiftKey)return;
+ e.preventDefault();
+ openTutorial();
+});
+
 autoLoad();
+
+// First visit: show the splash once
+let tutorialSeen=false;
+try{tutorialSeen=!!localStorage.getItem(TUTORIAL_SEEN_KEY)}catch{}
+if(!tutorialSeen)openTutorial();
 
 /* ---- Open Spotify links in the app ----
    Desktop: try the spotify: URI (opens the app); if nothing took focus, fall back to the web link in a new tab.
