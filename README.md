@@ -1,6 +1,6 @@
 # Salt's Site
 
-The personal site for Salt & Vi, hosted on GitHub Pages at [my-music.site](https://my-music.site). It includes a quick-access hub, a few small game tools, a music ratings dashboard, a live multiplayer quiz, and the site's legal pages.
+The personal site. hosted on GitHub Pages at [my-music.site](https://my-music.site). It includes a quick-access hub, a few small game tools, a music ratings dashboard, a live multiplayer quiz, and the site's legal pages.
 
 ## Pages
 
@@ -82,4 +82,4 @@ Question images must be hosted on imgur.com. The built app is committed in `quiz
 - [`spicetify-salt-music`](https://github.com/BrandonHfx/spicetify-salt-music): the Spicetify extension that exports ratings for the music page.
 - `ImgurDownloader`, `Bingo`, and `WebM-Maker-Thing-Idk`: small utilities.
 
-Made by Salt & Vi.
+Made by Brandon
