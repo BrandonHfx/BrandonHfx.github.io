@@ -1,11 +1,17 @@
 # Save this file as .github/workflows/ratings.yml in your repo
 name: ratings-to-discord
 on:
+  # Checks the Gist every 30 minutes; posts a digest only if it changed
   schedule:
     - cron: "*/30 * * * *"
+  # Lets you run it by hand from the Actions tab
   workflow_dispatch:
 permissions:
   contents: write
+# Only one run at a time, so two runs can't push over each other
+concurrency:
+  group: ratings-bot
+  cancel-in-progress: false
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -18,8 +24,23 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
-      - run: |
+      - name: Save seen state
+        run: |
           git config user.name "ratings-bot"
           git config user.email "ratings-bot@users.noreply.github.com"
           git add state/
-          git diff --cached --quiet || (git commit -m "update seen state" && git push)
+          if git diff --cached --quiet; then
+            echo "No state changes to save"
+            exit 0
+          fi
+          git commit -m "update seen state"
+          # Rebase onto the latest main and retry if another push landed first
+          for i in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              echo "State pushed"
+              exit 0
+            fi
+            echo "Push rejected, retrying in 5s (attempt $i)"
+            sleep 5
+          done
+          exit 1
